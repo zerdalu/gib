@@ -1,0 +1,283 @@
+@source "../ui";
+@import "tailwindcss";
+
+@theme {
+  /* Base Spacing Unit */
+  --spacing: 0.25rem;
+
+  /* Typography Families */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography Metrics */
+  --tracking-ui: -0.01em;
+  --tracking-mono: 0.015em;
+  --tracking-heading: -0.025em;
+  --font-weight-ui: 500;
+  --font-weight-heading: 600;
+
+  /* Surface Hierarchy (Dark Default) */
+  --color-surface-canvas: oklch(0.13 0.008 265);
+  --color-surface-100: oklch(0.17 0.01 265);
+  --color-surface-200: oklch(0.21 0.012 265);
+  --color-surface-300: oklch(0.25 0.014 265);
+  --color-surface-sunken: oklch(0.105 0.007 265);
+  --color-surface-hover: oklch(0.27 0.015 265);
+  --color-surface-active: oklch(0.31 0.018 265);
+  --color-surface-backdrop: oklch(0.08 0.005 265 / 0.72);
+
+  /* Text Hierarchy (WCAG AA Compliant) */
+  --color-text-primary: oklch(0.96 0.005 265);
+  --color-text-secondary: oklch(0.8 0.012 265);
+  --color-text-muted: oklch(0.68 0.014 265);
+  --color-text-disabled: oklch(0.52 0.01 265);
+  --color-text-on-accent: oklch(0.13 0.01 265);
+  --color-text-inverse: oklch(0.13 0.008 265);
+
+  /* Borders & Focus Rings */
+  --color-border-subtle: oklch(0.25 0.012 265);
+  --color-border-default: oklch(0.32 0.015 265);
+  --color-border-strong: oklch(0.45 0.02 265);
+  --color-border-focus: oklch(0.76 0.15 195);
+
+  /* Brand & Accent */
+  --color-accent-primary: oklch(0.76 0.15 195);
+  --color-accent-primary-hover: oklch(0.81 0.15 195);
+  --color-accent-primary-active: oklch(0.71 0.15 195);
+  --color-accent-subtle: oklch(0.76 0.15 195 / 0.14);
+  --color-accent-border: oklch(0.76 0.15 195 / 0.42);
+  --color-accent-secondary: oklch(0.72 0.14 280);
+
+  /* Semantic Status: Success */
+  --color-status-success: oklch(0.75 0.16 152);
+  --color-status-success-bg: oklch(0.75 0.16 152 / 0.14);
+  --color-status-success-border: oklch(0.75 0.16 152 / 0.42);
+  --color-status-success-text: oklch(0.85 0.13 152);
+
+  /* Semantic Status: Warning */
+  --color-status-warning: oklch(0.8 0.16 82);
+  --color-status-warning-bg: oklch(0.8 0.16 82 / 0.14);
+  --color-status-warning-border: oklch(0.8 0.16 82 / 0.42);
+  --color-status-warning-text: oklch(0.88 0.13 82);
+
+  /* Semantic Status: Danger */
+  --color-status-danger: oklch(0.68 0.2 25);
+  --color-status-danger-bg: oklch(0.68 0.2 25 / 0.15);
+  --color-status-danger-border: oklch(0.68 0.2 25 / 0.45);
+  --color-status-danger-text: oklch(0.83 0.14 25);
+
+  /* Semantic Status: Info */
+  --color-status-info: oklch(0.74 0.15 235);
+  --color-status-info-bg: oklch(0.74 0.15 235 / 0.14);
+  --color-status-info-border: oklch(0.74 0.15 235 / 0.42);
+  --color-status-info-text: oklch(0.85 0.12 235);
+
+  /* Architectural Geometry (Radii) */
+  --radius-control: 0.375rem;
+  --radius-panel: 0.625rem;
+  --radius-badge: 0.25rem;
+  --radius-toggle: 0.25rem;
+  --radius-track: 9999px;
+
+  /* Elevation & Depth (Shadows) */
+  --shadow-control: 0 1px 2px 0 oklch(0 0 0 / 0.24);
+  --shadow-panel: 0 4px 12px -2px oklch(0 0 0 / 0.32), 0 2px 4px -2px oklch(0 0 0 / 0.2);
+  --shadow-floating: 0 12px 28px -4px oklch(0 0 0 / 0.48), 0 4px 10px -2px oklch(0 0 0 / 0.3);
+  --shadow-modal: 0 24px 48px -12px oklch(0 0 0 / 0.65), 0 8px 16px -4px oklch(0 0 0 / 0.4);
+
+  /* Backdrop Blur */
+  --blur-overlay: 6px;
+  --blur-floating: 12px;
+
+  /* Motion Curves */
+  --ease-ui: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@utility h-control-xs {
+  height: var(--control-h-xs);
+}
+
+@utility h-control-sm {
+  height: var(--control-h-sm);
+}
+
+@utility h-control-md {
+  height: var(--control-h-md);
+}
+
+@utility h-control-lg {
+  height: var(--control-h-lg);
+}
+
+@utility min-h-control-sm {
+  min-height: var(--control-h-sm);
+}
+
+@utility size-control-xs {
+  width: var(--control-h-xs);
+  height: var(--control-h-xs);
+}
+
+@utility size-control-sm {
+  width: var(--control-h-sm);
+  height: var(--control-h-sm);
+}
+
+@utility size-control-md {
+  width: var(--control-h-md);
+  height: var(--control-h-md);
+}
+
+@utility px-control-px-xs {
+  padding-inline: var(--control-px-xs);
+}
+
+@utility px-control-px-sm {
+  padding-inline: var(--control-px-sm);
+}
+
+@utility px-control-px-md {
+  padding-inline: var(--control-px-md);
+}
+
+@utility px-control-px-lg {
+  padding-inline: var(--control-px-lg);
+}
+
+@utility p-panel-sm {
+  padding: var(--panel-p-sm);
+}
+
+@utility p-panel {
+  padding: var(--panel-p);
+}
+
+@utility p-panel-lg {
+  padding: var(--panel-p-lg);
+}
+
+@utility px-panel {
+  padding-inline: var(--panel-p);
+}
+
+@utility py-panel-sm {
+  padding-block: var(--panel-p-sm);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    isolation: isolate;
+
+    /* Control Density & Panel Spacing Tokens */
+    --control-h-xs: 1.5rem;
+    --control-h-sm: 1.875rem;
+    --control-h-md: 2.25rem;
+    --control-h-lg: 2.625rem;
+    --control-px-xs: 0.5rem;
+    --control-px-sm: 0.625rem;
+    --control-px-md: 0.875rem;
+    --control-px-lg: 1.125rem;
+    --panel-p-sm: 0.875rem;
+    --panel-p: 1.25rem;
+    --panel-p-lg: 1.5rem;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+
+    --color-surface-canvas: oklch(0.975 0.004 265);
+    --color-surface-100: oklch(1 0 0);
+    --color-surface-200: oklch(0.99 0.003 265);
+    --color-surface-300: oklch(0.945 0.006 265);
+    --color-surface-sunken: oklch(0.92 0.008 265);
+    --color-surface-hover: oklch(0.91 0.009 265);
+    --color-surface-active: oklch(0.88 0.012 265);
+    --color-surface-backdrop: oklch(0.15 0.01 265 / 0.45);
+
+    --color-text-primary: oklch(0.16 0.01 265);
+    --color-text-secondary: oklch(0.34 0.014 265);
+    --color-text-muted: oklch(0.46 0.014 265);
+    --color-text-disabled: oklch(0.62 0.01 265);
+    --color-text-on-accent: oklch(0.99 0.003 265);
+    --color-text-inverse: oklch(0.975 0.004 265);
+
+    --color-border-subtle: oklch(0.9 0.008 265);
+    --color-border-default: oklch(0.83 0.012 265);
+    --color-border-strong: oklch(0.7 0.016 265);
+    --color-border-focus: oklch(0.5 0.16 205);
+
+    --color-accent-primary: oklch(0.5 0.16 205);
+    --color-accent-primary-hover: oklch(0.45 0.16 205);
+    --color-accent-primary-active: oklch(0.4 0.16 205);
+    --color-accent-subtle: oklch(0.5 0.16 205 / 0.12);
+    --color-accent-border: oklch(0.5 0.16 205 / 0.38);
+    --color-accent-secondary: oklch(0.52 0.17 280);
+
+    --color-status-success: oklch(0.52 0.16 152);
+    --color-status-success-bg: oklch(0.52 0.16 152 / 0.12);
+    --color-status-success-border: oklch(0.52 0.16 152 / 0.38);
+    --color-status-success-text: oklch(0.36 0.13 152);
+
+    --color-status-warning: oklch(0.58 0.16 75);
+    --color-status-warning-bg: oklch(0.58 0.16 75 / 0.14);
+    --color-status-warning-border: oklch(0.58 0.16 75 / 0.4);
+    --color-status-warning-text: oklch(0.4 0.13 75);
+
+    --color-status-danger: oklch(0.55 0.2 25);
+    --color-status-danger-bg: oklch(0.55 0.2 25 / 0.12);
+    --color-status-danger-border: oklch(0.55 0.2 25 / 0.38);
+    --color-status-danger-text: oklch(0.42 0.17 25);
+
+    --color-status-info: oklch(0.52 0.15 235);
+    --color-status-info-bg: oklch(0.52 0.15 235 / 0.12);
+    --color-status-info-border: oklch(0.52 0.15 235 / 0.38);
+    --color-status-info-text: oklch(0.38 0.13 235);
+
+    --shadow-control: 0 1px 2px 0 oklch(0.15 0.01 265 / 0.06);
+    --shadow-panel: 0 4px 12px -2px oklch(0.15 0.01 265 / 0.08), 0 2px 4px -2px oklch(0.15 0.01 265 / 0.04);
+    --shadow-floating: 0 12px 28px -4px oklch(0.15 0.01 265 / 0.14), 0 4px 10px -2px oklch(0.15 0.01 265 / 0.08);
+    --shadow-modal: 0 24px 48px -12px oklch(0.15 0.01 265 / 0.22), 0 8px 16px -4px oklch(0.15 0.01 265 / 0.1);
+  }
+
+  body {
+    position: relative;
+    font-family: var(--font-sans);
+    background-color: var(--color-surface-canvas);
+    color: var(--color-text-primary);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-default) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--color-border-default);
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-border-strong);
+  }
+
+  *::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-accent-primary);
+  }
+}
