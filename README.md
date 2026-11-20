@@ -17,5 +17,6 @@
 - Oxlint - https://oxc.rs/docs/guide/usage/linter.html
 - Oxfmt - https://oxc.rs/docs/guide/usage/formatter.html
 - Vitest - https://vitest.dev/
+- Babel - https://babel.dev/
 
 - TypeScript - https://www.typescriptlang.org/

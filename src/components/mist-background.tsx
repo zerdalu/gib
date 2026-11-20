@@ -265,6 +265,7 @@ export function MistBackground(): ReactElement {
     let isContextLost = false;
 
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const disposeWebGl = (): void => {
       if (!gl) {
@@ -280,20 +281,22 @@ export function MistBackground(): ReactElement {
       }
     };
 
-    const resizeCanvas = (): void => {
+    const resizeCanvas = (): boolean => {
       if (!gl || isContextLost) {
-        return;
+        return false;
       }
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const rect = canvas.getBoundingClientRect();
       const width = Math.max(1, Math.round(rect.width * dpr));
       const height = Math.max(1, Math.round(rect.height * dpr));
 
-      if (canvas.width !== width || canvas.height !== height) {
+      const didResize = canvas.width !== width || canvas.height !== height;
+      if (didResize) {
         canvas.width = width;
         canvas.height = height;
       }
       gl.viewport(0, 0, canvas.width, canvas.height);
+      return didResize;
     };
 
     const drawFrame = (timeSeconds: number): void => {
@@ -423,6 +426,11 @@ export function MistBackground(): ReactElement {
       startOrRenderStatic();
     };
 
+    const handleThemeChange = (): void => {
+      colors = readThemeColors(probeCtx);
+      drawFrame(elapsedSeconds);
+    };
+
     const handleContextLost = (event: Event): void => {
       event.preventDefault();
       isContextLost = true;
@@ -438,21 +446,19 @@ export function MistBackground(): ReactElement {
     };
 
     const resizeObserver = new ResizeObserver(() => {
-      resizeCanvas();
-      if (reducedMotionQuery.matches) {
+      const didResize = resizeCanvas();
+      if (!document.hidden && (didResize || reducedMotionQuery.matches)) {
         drawFrame(elapsedSeconds);
       }
     });
 
-    const themeObserver = new MutationObserver(() => {
-      colors = readThemeColors(probeCtx);
-      drawFrame(elapsedSeconds);
-    });
+    const themeObserver = new MutationObserver(handleThemeChange);
 
     canvas.addEventListener("webglcontextlost", handleContextLost);
     canvas.addEventListener("webglcontextrestored", handleContextRestored);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     reducedMotionQuery.addEventListener("change", handleReducedMotionChange);
+    colorSchemeQuery.addEventListener("change", handleThemeChange);
     resizeObserver.observe(canvas);
     themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -471,6 +477,7 @@ export function MistBackground(): ReactElement {
       canvas.removeEventListener("webglcontextrestored", handleContextRestored);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       reducedMotionQuery.removeEventListener("change", handleReducedMotionChange);
+      colorSchemeQuery.removeEventListener("change", handleThemeChange);
       disposeWebGl();
       gl = null;
     };

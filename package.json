@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "pnpm run cf-typegen && tsc -b && vite build",
     "deploy": "pnpm run build && wrangler deploy",
     "lint": "oxlint",
     "test": "vitest run",

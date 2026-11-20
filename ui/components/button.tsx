@@ -9,7 +9,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   primary:
     "bg-accent-primary text-text-on-accent border-transparent shadow-control hover:bg-accent-primary-hover active:bg-accent-primary-active",
   secondary:
-    "bg-surface-300 text-text-primary border-border-subtle shadow-control hover:bg-surface-hover hover:border-border-default active:bg-surface-active",
+    "bg-surface-300 text-text-primary border-border-default shadow-control hover:bg-surface-hover hover:border-border-strong active:bg-surface-active",
   outline:
     "bg-transparent text-text-primary border-border-default hover:bg-surface-hover hover:border-border-strong active:bg-surface-active",
   ghost:
@@ -43,7 +43,7 @@ export function Button({
     <BaseButton
       className={cn(
         "inline-flex shrink-0 cursor-pointer items-center justify-center border font-mono font-ui tracking-ui whitespace-nowrap select-none",
-        "min-size-6 rounded-control transition-colors duration-150 ease-ui",
+        "min-h-6 min-w-6 rounded-control transition-colors duration-150 ease-ui",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
         "disabled:pointer-events-none disabled:opacity-45 data-disabled:pointer-events-none data-disabled:opacity-45",
         variantClasses[variant],

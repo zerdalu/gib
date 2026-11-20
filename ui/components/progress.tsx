@@ -40,7 +40,11 @@ export function Progress({
       ) : null}
       <BaseProgress.Track className="h-2 w-full overflow-hidden rounded-track border border-border-subtle bg-surface-sunken">
         <BaseProgress.Indicator
-          className={cn("h-full rounded-track transition-all duration-200 ease-ui", indicatorVariantClasses[variant])}
+          className={cn(
+            "h-full rounded-track transition-all duration-200 ease-ui",
+            "data-indeterminate:w-1/3 data-indeterminate:transition-none motion-safe:data-indeterminate:animate-progress-indeterminate motion-reduce:data-indeterminate:mx-auto",
+            indicatorVariantClasses[variant],
+          )}
         />
       </BaseProgress.Track>
     </BaseProgress.Root>
