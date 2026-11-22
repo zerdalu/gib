@@ -1,8 +1,12 @@
 import gibIconUrl from "@/assets/icon.svg";
+import { BranchConnector, ConvergeConnector, HorizontalConnector } from "@/components/node-connectors";
+import { NodeFrame, type NodePort } from "@/components/node-frame";
 import { QuickCopy } from "@/components/quick-copy";
-import { ArrowUpRightIcon } from "@phosphor-icons/react";
+import { NodeFrameVariants, NodePortSides, NodePortTones, QuickCopyVariants } from "@/variants";
+import { ArrowUpRightIcon, CpuIcon, StackIcon, TerminalIcon, WrenchIcon } from "@phosphor-icons/react";
 import { Separator } from "@ui/index";
-import type { CSSProperties, ReactElement } from "react";
+import { cn } from "cn";
+import { useState, type CSSProperties, type ReactElement } from "react";
 
 interface StackLibrary {
   readonly index: string;
@@ -10,8 +14,10 @@ interface StackLibrary {
   readonly href: string;
 }
 
+type StackGroupId = "interface" | "state-edge" | "tooling";
+
 interface StackGroup {
-  readonly id: string;
+  readonly id: StackGroupId;
   readonly title: string;
   readonly items: readonly StackLibrary[];
 }
@@ -30,7 +36,7 @@ const GIB_ICON_MASK_STYLE: CSSProperties = {
   WebkitMaskSize: "contain",
 };
 
-const STACK_GROUPS: readonly StackGroup[] = [
+const STACK_GROUPS: readonly [StackGroup, StackGroup, StackGroup] = [
   {
     id: "interface",
     title: "Interface",
@@ -69,62 +75,142 @@ const STACK_GROUPS: readonly StackGroup[] = [
   },
 ];
 
-interface StackColumnProps {
-  readonly group: StackGroup;
+const BRANCH_IDS: readonly [StackGroupId, StackGroupId, StackGroupId] = [
+  STACK_GROUPS[0].id,
+  STACK_GROUPS[1].id,
+  STACK_GROUPS[2].id,
+];
+
+const EMBLEM_PORTS: readonly NodePort[] = [{ side: NodePortSides.Right, tone: NodePortTones.Active, id: "emblem-out" }];
+
+const HUB_PORTS: readonly NodePort[] = [
+  { side: NodePortSides.Left, tone: NodePortTones.Active, id: "hub-in" },
+  { side: NodePortSides.Bottom, tone: NodePortTones.Active, id: "hub-out" },
+];
+
+const FEATURED_PORTS: readonly NodePort[] = [{ side: NodePortSides.Top, tone: NodePortTones.Active, id: "clone-in" }];
+
+function renderGroupIcon(groupId: StackGroupId, isActive: boolean): ReactElement {
+  const iconClassName = cn(
+    "size-4.5 shrink-0 transition-colors duration-overlay ease-ui",
+    isActive ? "text-accent-primary" : "text-text-muted",
+  );
+
+  switch (groupId) {
+    case "interface":
+      return <StackIcon aria-hidden="true" className={iconClassName} />;
+    case "state-edge":
+      return <CpuIcon aria-hidden="true" className={iconClassName} />;
+    case "tooling":
+      return <WrenchIcon aria-hidden="true" className={iconClassName} />;
+    default: {
+      const _exhaustive: never = groupId;
+      throw new Error(`Unhandled stack group id: ${String(_exhaustive)}`);
+    }
+  }
 }
 
-function StackColumn({ group }: StackColumnProps): ReactElement {
+function resolveGroupIndex(groupId: StackGroupId): number {
+  switch (groupId) {
+    case "interface":
+      return 0;
+    case "state-edge":
+      return 1;
+    case "tooling":
+      return 2;
+    default: {
+      const _exhaustive: never = groupId;
+      throw new Error(`Unhandled stack group id: ${String(_exhaustive)}`);
+    }
+  }
+}
+
+interface StackNodeProps {
+  readonly group: StackGroup;
+  readonly isActive: boolean;
+  readonly onActivate: (id: StackGroupId) => void;
+}
+
+function StackNode({ group, isActive, onActivate }: StackNodeProps): ReactElement {
+  const portTone = isActive ? NodePortTones.Active : NodePortTones.Muted;
+  const ports: readonly NodePort[] = [
+    { side: NodePortSides.Top, tone: portTone, id: `${group.id}-in` },
+    { side: NodePortSides.Bottom, tone: portTone, id: `${group.id}-out` },
+  ];
+
+  const handleActivate = (): void => {
+    onActivate(group.id);
+  };
+
   return (
-    <section aria-labelledby={`stack-group-${group.id}`} className="flex flex-col gap-3">
-      <div className="flex items-baseline justify-between gap-2">
-        <h2
-          id={`stack-group-${group.id}`}
-          className="font-sans text-sm font-heading tracking-heading text-text-primary"
-        >
-          {group.title}
-        </h2>
-        <span className="font-mono text-xs text-text-muted tabular-nums">
-          {String(group.items.length).padStart(2, "0")}
-        </span>
-      </div>
-      <Separator />
-      <ul className="flex flex-col gap-1">
-        {group.items.map((item) => (
-          <li key={item.name}>
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex min-h-control-sm min-w-hit items-center justify-between gap-2 rounded-control px-control-px-sm py-1.5 text-text-primary focus-ring transition-control duration-control ease-ui hover:bg-accent-primary hover:text-text-on-accent active:scale-press active:bg-accent-primary-active"
+    <section aria-labelledby={`stack-group-${group.id}`} className="flex h-full flex-col">
+      <NodeFrame
+        active={isActive}
+        ports={ports}
+        className="h-full"
+        contentClassName="flex h-full flex-col gap-2.5 p-panel-sm"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            {renderGroupIcon(group.id, isActive)}
+            <h2
+              id={`stack-group-${group.id}`}
+              className="truncate font-display text-sm font-heading tracking-heading text-text-primary"
             >
-              <span className="flex min-w-0 items-center gap-2.5">
-                <span className="font-mono text-xs text-text-muted tabular-nums transition-colors duration-control ease-ui group-hover:text-text-on-accent">
-                  {item.index}
+              {group.title}
+            </h2>
+          </div>
+          <span className="font-mono text-xs text-text-muted tabular-nums">
+            {String(group.items.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        <Separator />
+
+        <ul className="flex flex-col gap-0.5">
+          {group.items.map((item) => (
+            <li key={item.name}>
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onMouseEnter={handleActivate}
+                onFocus={handleActivate}
+                className="group flex min-h-hit min-w-hit items-center justify-between gap-2 rounded-control px-control-px-sm py-1 text-text-primary focus-ring transition-control duration-control ease-ui hover:bg-accent-subtle hover:text-text-primary active:scale-press active:bg-surface-active"
+              >
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <span className="font-mono text-xs text-text-muted tabular-nums transition-colors duration-control ease-ui group-hover:text-accent-primary">
+                    {item.index}
+                  </span>
+                  <span className="truncate font-sans text-sm font-ui">{item.name}</span>
                 </span>
-                <span className="truncate font-sans text-sm font-ui">{item.name}</span>
-              </span>
-              <ArrowUpRightIcon
-                aria-hidden="true"
-                className="size-4.5 shrink-0 text-text-muted transition-[color,translate] duration-control ease-ui group-hover:text-text-on-accent motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5"
-              />
-            </a>
-          </li>
-        ))}
-      </ul>
+                <ArrowUpRightIcon
+                  aria-hidden="true"
+                  className="size-4.5 shrink-0 text-text-muted transition-[color,translate] duration-control ease-ui group-hover:text-accent-primary motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5"
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </NodeFrame>
     </section>
   );
 }
 
 export function App(): ReactElement {
+  const [activeGroupId, setActiveGroupId] = useState<StackGroupId>("interface");
+
   return (
-    <div className="flex min-h-screen flex-col text-text-primary">
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 pt-8 pb-5 md:px-10 md:pt-10">
+    <div className="flex min-h-dvh flex-col text-text-primary">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 pt-5 pb-3.5 md:px-10 md:pt-6">
         <div className="flex items-center gap-3">
-          <span
-            aria-hidden="true"
-            style={GIB_ICON_MASK_STYLE}
-            className="inline-block size-4.5 shrink-0 bg-text-primary"
-          />
+          <span className="inline-flex size-control-sm items-center justify-center rounded-control border border-node-border bg-node-glass shadow-control backdrop-blur-overlay">
+            <span
+              aria-hidden="true"
+              style={GIB_ICON_MASK_STYLE}
+              className="inline-block size-4.5 shrink-0 bg-accent-primary"
+            />
+          </span>
           <span className="font-mono text-sm font-heading tracking-mono text-text-primary uppercase">Gib</span>
         </div>
 
@@ -133,7 +219,7 @@ export function App(): ReactElement {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Gib repository on GitHub"
-          className="inline-flex h-control-md min-h-hit min-w-hit items-center gap-2 rounded-control border border-border-default bg-surface-100 px-control-px-md font-mono text-xs font-ui tracking-mono text-text-primary shadow-control focus-ring transition-control duration-control ease-ui hover:border-border-strong hover:bg-surface-hover active:scale-press active:bg-surface-active"
+          className="inline-flex h-control-md min-h-hit min-w-hit items-center gap-2 rounded-control border border-node-border bg-node-glass px-control-px-md font-mono text-xs font-ui tracking-mono text-text-primary shadow-control focus-ring backdrop-blur-overlay transition-control duration-control ease-ui hover:border-border-strong hover:bg-surface-hover active:scale-press active:bg-surface-active"
         >
           <svg aria-hidden="true" className="size-4.5 shrink-0">
             <use href="/icons.svg#github-icon" />
@@ -146,32 +232,100 @@ export function App(): ReactElement {
         <Separator />
       </div>
 
-      <main className="mx-auto grid w-full max-w-5xl flex-1 grid-cols-1 content-start items-start gap-y-10 px-6 py-12 md:px-10 md:py-16 lg:grid-cols-12 lg:gap-x-12">
-        <section aria-labelledby="gib-overview" className="flex flex-col items-start gap-4 lg:col-span-5">
-          <span
-            id="gib-overview"
-            className="border-b-2 border-text-primary pb-1 font-mono text-xs font-ui tracking-mono text-text-primary uppercase"
-          >
-            Overview
-          </span>
-          <h1 className="font-display text-4xl font-heading tracking-heading text-text-primary">Gib</h1>
-          <p className="font-sans text-sm leading-relaxed text-text-secondary">
-            Full-stack edge application template powered by React, Hono, and Cloudflare Workers. Its Base UI and
-            Tailwind CSS v4 interface is governed by CSS tokens in{" "}
-            <code className="font-mono text-xs text-text-primary">src/index.css</code>.
-          </p>
-        </section>
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-5 md:px-10 md:py-6">
+        <div className="my-auto flex w-full flex-col">
+          <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-12 lg:gap-0">
+            <div className="flex flex-col items-center gap-2 lg:col-span-3">
+              <NodeFrame
+                active
+                ports={EMBLEM_PORTS}
+                className="w-28"
+                contentClassName="flex aspect-square items-center justify-center p-panel-sm"
+              >
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-4 rounded-full bg-node-glow opacity-45 blur-xl"
+                />
+                <span
+                  aria-hidden="true"
+                  style={GIB_ICON_MASK_STYLE}
+                  className="relative inline-block size-9 bg-text-primary"
+                />
+              </NodeFrame>
+              <span className="font-mono text-xs tracking-mono text-text-secondary">Edge Template</span>
+            </div>
 
-        <section
-          aria-label="Library stack"
-          className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:col-span-7"
-        >
-          {STACK_GROUPS.map((group) => (
-            <StackColumn key={group.id} group={group} />
-          ))}
-        </section>
+            <HorizontalConnector className="lg:col-span-2" />
 
-        <QuickCopy repoUrl={REPO_SSH_URL} className="justify-self-start lg:col-span-12" />
+            <section aria-labelledby="gib-overview" className="lg:col-span-7">
+              <NodeFrame active ports={HUB_PORTS} contentClassName="flex flex-col gap-2.5 p-panel">
+                <div className="flex items-center gap-2.5">
+                  <span className="inline-flex size-control-sm shrink-0 items-center justify-center rounded-control border border-node-border bg-surface-sunken/70">
+                    <span
+                      aria-hidden="true"
+                      style={GIB_ICON_MASK_STYLE}
+                      className="inline-block size-4.5 bg-accent-primary"
+                    />
+                  </span>
+                  <h1
+                    id="gib-overview"
+                    className="font-display text-xl font-heading tracking-heading text-text-primary"
+                  >
+                    Gib
+                  </h1>
+                </div>
+
+                <p className="font-sans text-sm leading-relaxed text-text-secondary">
+                  Full-stack edge application template powered by React, Hono, and Cloudflare Workers. Its Base UI and
+                  Tailwind CSS v4 interface is governed by CSS tokens in{" "}
+                  <code className="rounded-control border border-border-subtle bg-surface-sunken/75 px-1.5 py-0.5 font-mono text-xs text-text-primary">
+                    src/index.css
+                  </code>
+                  .
+                </p>
+              </NodeFrame>
+            </section>
+          </div>
+
+          <BranchConnector ids={BRANCH_IDS} activeId={activeGroupId} />
+
+          <section aria-label="Library stack" className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3 lg:mt-0">
+            {STACK_GROUPS.map((group) => (
+              <StackNode
+                key={group.id}
+                group={group}
+                isActive={group.id === activeGroupId}
+                onActivate={setActiveGroupId}
+              />
+            ))}
+          </section>
+
+          <ConvergeConnector activeIndex={resolveGroupIndex(activeGroupId)} />
+
+          <section aria-labelledby="quick-clone-heading" className="mt-5 w-full sm:sticky sm:bottom-4 sm:z-20 lg:mt-0">
+            <NodeFrame
+              variant={NodeFrameVariants.Featured}
+              ports={FEATURED_PORTS}
+              contentClassName="flex flex-col gap-3 p-panel-sm md:flex-row md:items-center md:gap-4"
+            >
+              <div className="flex shrink-0 items-center gap-2.5">
+                <span className="inline-flex size-control-sm shrink-0 items-center justify-center rounded-control border border-node-featured-well-border bg-node-featured-well">
+                  <TerminalIcon aria-hidden="true" className="size-4.5 text-node-featured-text" />
+                </span>
+                <h2
+                  id="quick-clone-heading"
+                  className="font-display text-sm font-heading tracking-heading whitespace-nowrap text-node-featured-text"
+                >
+                  Quick Clone
+                </h2>
+              </div>
+
+              <div aria-hidden="true" className="hidden h-6 w-px shrink-0 bg-node-featured-well-border md:block" />
+
+              <QuickCopy variant={QuickCopyVariants.Featured} repoUrl={REPO_SSH_URL} className="w-full flex-1" />
+            </NodeFrame>
+          </section>
+        </div>
       </main>
     </div>
   );

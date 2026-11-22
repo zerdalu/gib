@@ -1,3 +1,4 @@
+import { QuickCopyVariants, type QuickCopyVariant } from "@/variants";
 import { CheckIcon, CopyIcon, WarningCircleIcon } from "@phosphor-icons/react";
 import {
   Button,
@@ -12,6 +13,8 @@ import {
 import { cn } from "cn";
 import { useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type ReactElement } from "react";
 
+export type { QuickCopyVariant };
+
 type CopyStatus = "idle" | "copied" | "failed";
 
 const STATUS_RESET_DELAY_MS = 2000;
@@ -20,6 +23,7 @@ const DEFAULT_PROJECT_NAME = "my-app";
 export interface QuickCopyProps {
   readonly repoUrl: string;
   readonly defaultName?: string;
+  readonly variant?: QuickCopyVariant;
   readonly className?: string;
 }
 
@@ -105,7 +109,7 @@ function getIconVisibilityClass(active: boolean): string {
     : "pointer-events-none opacity-0 scale-popup blur-transition motion-reduce:blur-none";
 }
 
-function renderStatusIcon(status: CopyStatus): ReactElement {
+function renderStatusIcon(status: CopyStatus, isFeatured: boolean): ReactElement {
   return (
     <span className="relative inline-flex size-4.5 items-center justify-center">
       <CopyIcon
@@ -119,7 +123,8 @@ function renderStatusIcon(status: CopyStatus): ReactElement {
         weight="bold"
         aria-hidden="true"
         className={cn(
-          "absolute size-4.5 text-status-success-text transition-icon duration-control ease-ui",
+          "absolute size-4.5 transition-icon duration-control ease-ui",
+          isFeatured ? "text-node-featured-text" : "text-status-success-text",
           getIconVisibilityClass(status === "copied"),
         )}
       />
@@ -134,11 +139,17 @@ function renderStatusIcon(status: CopyStatus): ReactElement {
   );
 }
 
-export function QuickCopy({ repoUrl, defaultName = DEFAULT_PROJECT_NAME, className }: QuickCopyProps): ReactElement {
+export function QuickCopy({
+  repoUrl,
+  defaultName = DEFAULT_PROJECT_NAME,
+  variant = QuickCopyVariants.Default,
+  className,
+}: QuickCopyProps): ReactElement {
   const [nameInput, setNameInput] = useState<string>("");
   const [status, setStatus] = useState<CopyStatus>("idle");
   const resetTimerRef = useRef<number | null>(null);
 
+  const isFeatured = variant === QuickCopyVariants.Featured;
   const projectName = resolveProjectName(nameInput, defaultName);
   const command = buildCloneCommand(repoUrl, projectName);
 
@@ -183,15 +194,29 @@ export function QuickCopy({ repoUrl, defaultName = DEFAULT_PROJECT_NAME, classNa
   return (
     <div
       className={cn(
-        "inline-flex w-fit max-w-full min-w-0 items-center gap-2 rounded-control border border-border-default bg-surface-100 py-0.5 pr-0.5 pl-3 shadow-control",
+        "inline-flex w-fit max-w-full min-w-0 items-center gap-2 rounded-control border py-1 pr-1 pl-3.5",
+        isFeatured
+          ? "border-node-featured-well-border bg-node-featured-well text-node-featured-text backdrop-blur-overlay"
+          : "border-border-default bg-surface-100 text-text-primary shadow-control",
         className,
       )}
     >
       <div className="-my-0.5 flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto py-1 pr-1">
-        <span aria-hidden="true" className="shrink-0 font-mono text-xs text-text-muted select-none">
+        <span
+          aria-hidden="true"
+          className={cn(
+            "shrink-0 font-mono text-xs select-none",
+            isFeatured ? "text-node-featured-muted" : "text-text-muted",
+          )}
+        >
           $
         </span>
-        <code className="inline-flex items-center gap-1.5 font-mono text-xs tracking-mono whitespace-nowrap text-text-primary">
+        <code
+          className={cn(
+            "inline-flex items-center gap-1.5 font-mono text-xs tracking-mono whitespace-nowrap",
+            isFeatured ? "text-node-featured-text" : "text-text-primary",
+          )}
+        >
           <span>{`git clone --depth 1 ${repoUrl}`}</span>
           <span className="inline-grid items-center">
             <span
@@ -212,7 +237,12 @@ export function QuickCopy({ repoUrl, defaultName = DEFAULT_PROJECT_NAME, classNa
               spellCheck={false}
               autoCapitalize="none"
               autoCorrect="off"
-              className="col-start-1 row-start-1 font-mono tracking-mono shadow-none"
+              className={cn(
+                "col-start-1 row-start-1 font-mono tracking-mono shadow-none",
+                isFeatured
+                  ? "border-node-featured-well-border bg-node-featured-well text-node-featured-text placeholder:text-node-featured-muted hover:border-node-featured-border"
+                  : undefined,
+              )}
             />
           </span>
           <span>{`&& rm -rf ${projectName}/.git`}</span>
@@ -228,10 +258,15 @@ export function QuickCopy({ repoUrl, defaultName = DEFAULT_PROJECT_NAME, classNa
               size={ButtonSizes.IconSm}
               aria-label={resolveAriaLabel(status)}
               onClick={handleCopyClick}
+              className={
+                isFeatured
+                  ? "text-node-featured-text hover:bg-node-featured-well hover:text-node-featured-text active:bg-node-featured-well"
+                  : undefined
+              }
             />
           }
         >
-          {renderStatusIcon(status)}
+          {renderStatusIcon(status, isFeatured)}
         </TooltipTrigger>
         <TooltipContent>{resolveTooltipLabel(status)}</TooltipContent>
       </Tooltip>
