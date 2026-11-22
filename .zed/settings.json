@@ -1,5 +1,5 @@
 {
-  "disable_ai": true,
+  "disable_ai": false,
   "format_on_save": "on",
   "jsx_tag_auto_close": {
     "enabled": true

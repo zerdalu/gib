@@ -20,3 +20,11 @@
 - Babel - https://babel.dev/
 
 - TypeScript - https://www.typescriptlang.org/
+
+## TODO
+
+- [ ] Build and publish a personal scaffolding CLI (e.g., `@zerdalu/getir` or `pnpm create @zerdalu/gib`) to bootstrap new projects from this template:
+  - Shallow clone `git@github.com:zerdalu/gib.git` over SSH into the target directory and remove `.git`
+  - Replace `"name": "gib"` in `package.json` and `wrangler.jsonc` with the new project name
+  - Update `<title>` in `index.html` and remove the template domain route from `wrangler.jsonc`
+  - Initialize a fresh Git repository (`git init`) and install dependencies (`pnpm install`)
