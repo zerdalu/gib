@@ -1,5 +1,14 @@
 import { CheckIcon, CopyIcon, WarningCircleIcon } from "@phosphor-icons/react";
-import { Button, ButtonSizes, ButtonVariants, Input, InputSizes } from "@ui/index";
+import {
+  Button,
+  ButtonSizes,
+  ButtonVariants,
+  Input,
+  InputSizes,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@ui/index";
 import { cn } from "cn";
 import { useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type ReactElement } from "react";
 
@@ -15,12 +24,14 @@ export interface QuickCopyProps {
 }
 
 function sanitizeInputValue(raw: string): string {
-  return raw.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9._-]/g, "");
+  return raw
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9._-]/g, "")
+    .replace(/^\.+/, "");
 }
 
 function resolveProjectName(value: string, fallback: string): string {
-  const cleaned = value.replace(/^\.+/, "");
-  return cleaned.length > 0 ? cleaned : fallback;
+  return value.length > 0 ? value : fallback;
 }
 
 function buildCloneCommand(repoUrl: string, projectName: string): string {
@@ -58,6 +69,21 @@ function resolveAriaLabel(status: CopyStatus): string {
   }
 }
 
+function resolveTooltipLabel(status: CopyStatus): string {
+  switch (status) {
+    case "idle":
+      return "Copy command";
+    case "copied":
+      return "Copied";
+    case "failed":
+      return "Copy failed";
+    default: {
+      const _exhaustive: never = status;
+      throw new Error(`Unhandled copy status: ${String(_exhaustive)}`);
+    }
+  }
+}
+
 function resolveLiveMessage(status: CopyStatus): string {
   switch (status) {
     case "idle":
@@ -73,19 +99,39 @@ function resolveLiveMessage(status: CopyStatus): string {
   }
 }
 
+function getIconVisibilityClass(active: boolean): string {
+  return active
+    ? "opacity-100 scale-100 blur-none"
+    : "pointer-events-none opacity-0 scale-popup blur-transition motion-reduce:blur-none";
+}
+
 function renderStatusIcon(status: CopyStatus): ReactElement {
-  switch (status) {
-    case "idle":
-      return <CopyIcon aria-hidden="true" className="size-4.5" />;
-    case "copied":
-      return <CheckIcon weight="bold" aria-hidden="true" className="size-4.5 text-status-success-text" />;
-    case "failed":
-      return <WarningCircleIcon aria-hidden="true" className="size-4.5 text-status-danger-text" />;
-    default: {
-      const _exhaustive: never = status;
-      throw new Error(`Unhandled copy status: ${String(_exhaustive)}`);
-    }
-  }
+  return (
+    <span className="relative inline-flex size-4.5 items-center justify-center">
+      <CopyIcon
+        aria-hidden="true"
+        className={cn(
+          "absolute size-4.5 transition-icon duration-control ease-ui",
+          getIconVisibilityClass(status === "idle"),
+        )}
+      />
+      <CheckIcon
+        weight="bold"
+        aria-hidden="true"
+        className={cn(
+          "absolute size-4.5 text-status-success-text transition-icon duration-control ease-ui",
+          getIconVisibilityClass(status === "copied"),
+        )}
+      />
+      <WarningCircleIcon
+        aria-hidden="true"
+        className={cn(
+          "absolute size-4.5 text-status-danger-text transition-icon duration-control ease-ui",
+          getIconVisibilityClass(status === "failed"),
+        )}
+      />
+    </span>
+  );
 }
 
 export function QuickCopy({ repoUrl, defaultName = DEFAULT_PROJECT_NAME, className }: QuickCopyProps): ReactElement {
@@ -141,7 +187,7 @@ export function QuickCopy({ repoUrl, defaultName = DEFAULT_PROJECT_NAME, classNa
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto">
+      <div className="-my-0.5 flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto py-1 pr-1">
         <span aria-hidden="true" className="shrink-0 font-mono text-xs text-text-muted select-none">
           $
         </span>
@@ -173,15 +219,22 @@ export function QuickCopy({ repoUrl, defaultName = DEFAULT_PROJECT_NAME, classNa
         </code>
       </div>
 
-      <Button
-        type="button"
-        variant={ButtonVariants.Ghost}
-        size={ButtonSizes.IconSm}
-        aria-label={resolveAriaLabel(status)}
-        onClick={handleCopyClick}
-      >
-        {renderStatusIcon(status)}
-      </Button>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <Button
+              type="button"
+              variant={ButtonVariants.Ghost}
+              size={ButtonSizes.IconSm}
+              aria-label={resolveAriaLabel(status)}
+              onClick={handleCopyClick}
+            />
+          }
+        >
+          {renderStatusIcon(status)}
+        </TooltipTrigger>
+        <TooltipContent>{resolveTooltipLabel(status)}</TooltipContent>
+      </Tooltip>
 
       <output aria-live="polite" className="sr-only">
         {resolveLiveMessage(status)}

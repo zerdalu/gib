@@ -15,7 +15,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   ghost:
     "bg-transparent text-text-secondary border-transparent hover:bg-surface-hover hover:text-text-primary active:bg-surface-active",
   danger:
-    "bg-status-danger-bg text-status-danger-text border-status-danger-border shadow-control hover:bg-status-danger hover:text-text-on-accent hover:border-transparent active:opacity-90",
+    "bg-status-danger-bg text-status-danger-text border-status-danger-border shadow-control hover:bg-status-danger hover:text-text-on-accent hover:border-transparent active:bg-status-danger-active active:text-text-on-accent active:border-transparent",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -26,6 +26,7 @@ const sizeClasses: Record<ButtonSize, string> = {
   "icon-xs": "size-control-xs p-0",
   "icon-sm": "size-control-sm p-0",
   "icon-md": "size-control-md p-0",
+  "icon-lg": "size-control-lg p-0",
 };
 
 export interface ButtonProps extends ComponentProps<typeof BaseButton> {
@@ -43,9 +44,10 @@ export function Button({
     <BaseButton
       className={cn(
         "inline-flex shrink-0 cursor-pointer items-center justify-center border font-mono font-ui tracking-ui whitespace-nowrap select-none",
-        "min-h-6 min-w-6 rounded-control transition-colors duration-150 ease-ui",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
-        "disabled:pointer-events-none disabled:opacity-45 data-disabled:pointer-events-none data-disabled:opacity-45",
+        "min-h-hit min-w-hit rounded-control transition-control duration-control ease-ui",
+        "active:scale-press",
+        "focus-ring",
+        "disabled:pointer-events-none disabled:opacity-disabled data-disabled:pointer-events-none data-disabled:opacity-disabled",
         variantClasses[variant],
         sizeClasses[size],
         className,

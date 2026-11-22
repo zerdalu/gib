@@ -19,6 +19,7 @@ export interface MenuContentProps extends ComponentProps<typeof BaseMenu.Popup> 
   readonly sideOffset?: ComponentProps<typeof BaseMenu.Positioner>["sideOffset"];
   readonly side?: ComponentProps<typeof BaseMenu.Positioner>["side"];
   readonly align?: ComponentProps<typeof BaseMenu.Positioner>["align"];
+  readonly collisionPadding?: ComponentProps<typeof BaseMenu.Positioner>["collisionPadding"];
 }
 
 export function MenuContent({
@@ -26,17 +27,24 @@ export function MenuContent({
   sideOffset = 6,
   side = "bottom",
   align = "start",
+  collisionPadding = 8,
   ...props
 }: MenuContentProps): ReactElement {
   return (
     <BaseMenu.Portal>
-      <BaseMenu.Positioner sideOffset={sideOffset} side={side} align={align} className="z-50 outline-none">
+      <BaseMenu.Positioner
+        sideOffset={sideOffset}
+        side={side}
+        align={align}
+        collisionPadding={collisionPadding}
+        className="z-50 outline-none"
+      >
         <BaseMenu.Popup
           className={cn(
-            "min-w-44 border border-border-default bg-surface-200 p-1 text-text-primary shadow-floating backdrop-blur-floating outline-none",
-            "rounded-panel transition-all duration-150 ease-ui",
-            "data-starting-style:scale-95 data-starting-style:opacity-0",
-            "data-ending-style:scale-95 data-ending-style:opacity-0",
+            "max-h-(--available-height) max-w-(--available-width) min-w-44 overflow-y-auto border border-border-default bg-surface-200 p-1 text-text-primary shadow-floating backdrop-blur-floating outline-none",
+            "origin-(--transform-origin) rounded-panel transition-popup duration-control ease-ui data-ending-style:duration-exit",
+            "data-starting-style:scale-popup data-starting-style:opacity-0",
+            "data-ending-style:scale-popup data-ending-style:opacity-0",
             className,
           )}
           {...props}
@@ -54,12 +62,11 @@ export function MenuItem({ className, danger = false, ...props }: MenuItemProps)
   return (
     <BaseMenu.Item
       className={cn(
-        "flex min-h-control-sm min-w-6 cursor-pointer items-center justify-between gap-2 px-control-px-sm py-1.5 font-sans text-xs outline-none select-none",
-        "rounded-control transition-colors duration-100 ease-ui",
+        "flex min-h-control-sm min-w-hit cursor-pointer items-center justify-between gap-2 rounded-control px-control-px-sm py-1.5 font-sans text-xs outline-none select-none",
         danger
           ? "text-status-danger-text data-highlighted:bg-status-danger-bg data-highlighted:text-status-danger-text"
           : "text-text-secondary data-highlighted:bg-surface-hover data-highlighted:text-text-primary",
-        "data-disabled:pointer-events-none data-disabled:opacity-45",
+        "data-disabled:pointer-events-none data-disabled:opacity-disabled",
         className,
       )}
       {...props}
@@ -73,18 +80,17 @@ export function MenuCheckboxItem({ className, children, ...props }: MenuCheckbox
   return (
     <BaseMenu.CheckboxItem
       className={cn(
-        "flex min-h-control-sm min-w-6 cursor-pointer items-center justify-between gap-2 px-control-px-sm py-1.5 font-sans text-xs text-text-secondary outline-none select-none",
-        "rounded-control transition-colors duration-100 ease-ui",
+        "flex min-h-control-sm min-w-hit cursor-pointer items-center justify-between gap-2 rounded-control px-control-px-sm py-1.5 font-sans text-xs text-text-secondary outline-none select-none",
         "data-highlighted:bg-surface-hover data-highlighted:text-text-primary",
         "data-checked:font-ui data-checked:text-text-primary",
-        "data-disabled:pointer-events-none data-disabled:opacity-45",
+        "data-disabled:pointer-events-none data-disabled:opacity-disabled",
         className,
       )}
       {...props}
     >
       <span className="truncate">{children}</span>
       <BaseMenu.CheckboxItemIndicator className="inline-flex shrink-0 items-center text-accent-primary">
-        <CheckIcon weight="bold" className="size-4" />
+        <CheckIcon weight="bold" aria-hidden="true" className="size-4" />
       </BaseMenu.CheckboxItemIndicator>
     </BaseMenu.CheckboxItem>
   );
@@ -102,18 +108,17 @@ export function MenuRadioItem({ className, children, ...props }: MenuRadioItemPr
   return (
     <BaseMenu.RadioItem
       className={cn(
-        "flex min-h-control-sm min-w-6 cursor-pointer items-center justify-between gap-2 px-control-px-sm py-1.5 font-sans text-xs text-text-secondary outline-none select-none",
-        "rounded-control transition-colors duration-100 ease-ui",
+        "flex min-h-control-sm min-w-hit cursor-pointer items-center justify-between gap-2 rounded-control px-control-px-sm py-1.5 font-sans text-xs text-text-secondary outline-none select-none",
         "data-highlighted:bg-surface-hover data-highlighted:text-text-primary",
         "data-checked:font-ui data-checked:text-text-primary",
-        "data-disabled:pointer-events-none data-disabled:opacity-45",
+        "data-disabled:pointer-events-none data-disabled:opacity-disabled",
         className,
       )}
       {...props}
     >
       <span className="truncate">{children}</span>
       <BaseMenu.RadioItemIndicator className="inline-flex shrink-0 items-center text-accent-primary">
-        <CircleIcon weight="fill" className="size-2.5" />
+        <CircleIcon weight="fill" aria-hidden="true" className="size-2.5" />
       </BaseMenu.RadioItemIndicator>
     </BaseMenu.RadioItem>
   );

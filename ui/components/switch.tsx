@@ -8,21 +8,22 @@ export function Switch({ className, ...props }: SwitchProps): ReactElement {
   return (
     <BaseSwitch.Root
       className={cn(
-        "relative inline-flex h-6 min-h-6 w-11 min-w-6 shrink-0 cursor-pointer items-center border border-border-default bg-surface-sunken p-0.5 shadow-control",
-        "rounded-track transition-colors duration-150 ease-ui",
-        "hover:border-border-strong",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
+        "relative inline-flex size-switch min-h-hit min-w-hit shrink-0 cursor-pointer items-center border border-border-default bg-surface-sunken shadow-control",
+        "rounded-track transition-control duration-control ease-ui",
+        "hover:border-border-strong active:scale-press",
+        "focus-ring",
         "data-checked:border-accent-primary data-checked:bg-accent-primary",
-        "disabled:pointer-events-none disabled:opacity-45 data-disabled:pointer-events-none data-disabled:opacity-45",
+        "data-invalid:border-status-danger data-invalid:focus-visible:outline-status-danger",
+        "disabled:pointer-events-none disabled:opacity-disabled data-disabled:pointer-events-none data-disabled:opacity-disabled",
         className,
       )}
       {...props}
     >
       <BaseSwitch.Thumb
         className={cn(
-          "pointer-events-none block size-4.5 rounded-track bg-text-secondary shadow-control",
-          "transition-transform duration-150 ease-spring",
-          "translate-x-0 data-checked:translate-x-5 data-checked:bg-text-on-accent",
+          "pointer-events-none block size-switch-thumb rounded-track bg-text-secondary shadow-control",
+          "transition-switch-thumb duration-control ease-toggle motion-reduce:transition-colors",
+          "translate-x-0 data-checked:translate-x-(--switch-travel) data-checked:bg-text-on-accent",
         )}
       />
     </BaseSwitch.Root>

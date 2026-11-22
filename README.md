@@ -1,6 +1,6 @@
 # Gib
 
-**Gib** is a full-stack edge application template powered by React, Hono, and Cloudflare Workers. It includes a token-driven UI system built on Base UI and Tailwind CSS v4 where colors, typography, geometry, elevation, density, and motion are controlled via CSS variables—allowing new projects to adopt a completely different visual identity by editing `src/index.css` without touching component code.
+**Gib** is a full-stack edge application template powered by React, Hono, and Cloudflare Workers. It includes a token-driven UI system built on Base UI and Tailwind CSS v4 where colors, theme polarity, typography, geometry, elevation, density, control proportions, focus rings, hit targets, and motion are all controlled via CSS variables—allowing new projects to adopt a completely different visual identity by editing `src/index.css` without touching component code. See [`STYLING.md`](./STYLING.md) for the complete token reference and re-skinning checklist.
 
 ## Library Stack
 
@@ -18,7 +18,6 @@
 - Oxfmt - https://oxc.rs/docs/guide/usage/formatter.html
 - Vitest - https://vitest.dev/
 - Babel - https://babel.dev/
-
 - TypeScript - https://www.typescriptlang.org/
 
 ## TODO

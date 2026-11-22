@@ -67,9 +67,15 @@ function ToastList(): ReactElement {
             toast={toast}
             className={cn(
               "group relative flex w-full items-start justify-between gap-3 border p-panel-sm shadow-floating backdrop-blur-floating",
-              "rounded-panel transition-all duration-150 ease-ui",
-              "data-starting-style:translate-y-2 data-starting-style:opacity-0",
-              "data-ending-style:translate-y-2 data-ending-style:opacity-0",
+              "rounded-panel transition-toast duration-toast ease-ui",
+              "translate-x-0 translate-y-0",
+              "data-swiping:translate-x-(--toast-swipe-movement-x) data-swiping:translate-y-(--toast-swipe-movement-y) data-swiping:transition-none data-swiping:select-none",
+              "data-ending-style:opacity-0 data-ending-style:duration-control data-limited:opacity-0 data-starting-style:opacity-0",
+              "motion-safe:data-ending-style:translate-y-full motion-safe:data-starting-style:translate-y-full",
+              "motion-safe:data-ending-style:data-[swipe-direction=right]:translate-x-full motion-safe:data-ending-style:data-[swipe-direction=right]:translate-y-0",
+              "motion-safe:data-ending-style:data-[swipe-direction=left]:-translate-x-full motion-safe:data-ending-style:data-[swipe-direction=left]:translate-y-0",
+              "motion-safe:data-ending-style:data-[swipe-direction=up]:-translate-y-full",
+              "motion-safe:data-ending-style:data-[swipe-direction=down]:translate-y-full",
               statusClasses[variant],
             )}
           >
@@ -78,18 +84,30 @@ function ToastList(): ReactElement {
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <BaseToast.Title className="font-mono text-xs font-ui tracking-ui text-text-primary" />
                 <BaseToast.Description className="font-sans text-xs text-text-secondary" />
+                {toast.actionProps ? (
+                  <div className="pt-1.5">
+                    <BaseToast.Action
+                      className={cn(
+                        "inline-flex h-control-xs min-h-hit min-w-hit shrink-0 cursor-pointer items-center justify-center border border-border-default bg-surface-300 px-control-px-xs font-mono text-xs font-ui tracking-ui text-text-primary shadow-control select-none",
+                        "rounded-control transition-control duration-control ease-ui",
+                        "hover:border-border-strong hover:bg-surface-hover active:scale-press active:bg-surface-active",
+                        "focus-ring",
+                      )}
+                    />
+                  </div>
+                ) : null}
               </div>
             </div>
             <BaseToast.Close
               aria-label="Dismiss notification"
               className={cn(
-                "inline-flex size-control-xs min-h-6 min-w-6 shrink-0 cursor-pointer items-center justify-center text-text-muted",
-                "rounded-control transition-colors duration-150 ease-ui",
+                "inline-flex size-control-xs min-h-hit min-w-hit shrink-0 cursor-pointer items-center justify-center text-text-muted",
+                "rounded-control transition-control duration-control ease-ui active:scale-press-sm",
                 "hover:bg-surface-hover hover:text-text-primary",
-                "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-border-focus",
+                "focus-ring-tight",
               )}
             >
-              <XIcon className="size-4" />
+              <XIcon aria-hidden="true" className="size-4.5" />
             </BaseToast.Close>
           </BaseToast.Root>
         );

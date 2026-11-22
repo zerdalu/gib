@@ -18,6 +18,7 @@ export interface PopoverContentProps extends ComponentProps<typeof BasePopover.P
   readonly sideOffset?: ComponentProps<typeof BasePopover.Positioner>["sideOffset"];
   readonly side?: ComponentProps<typeof BasePopover.Positioner>["side"];
   readonly align?: ComponentProps<typeof BasePopover.Positioner>["align"];
+  readonly collisionPadding?: ComponentProps<typeof BasePopover.Positioner>["collisionPadding"];
 }
 
 export function PopoverContent({
@@ -25,17 +26,24 @@ export function PopoverContent({
   sideOffset = 8,
   side = "bottom",
   align = "center",
+  collisionPadding = 8,
   ...props
 }: PopoverContentProps): ReactElement {
   return (
     <BasePopover.Portal>
-      <BasePopover.Positioner sideOffset={sideOffset} side={side} align={align} className="z-50 outline-none">
+      <BasePopover.Positioner
+        sideOffset={sideOffset}
+        side={side}
+        align={align}
+        collisionPadding={collisionPadding}
+        className="z-50 outline-none"
+      >
         <BasePopover.Popup
           className={cn(
-            "w-72 border border-border-default bg-surface-200 p-panel-sm text-text-primary shadow-floating backdrop-blur-floating outline-none",
-            "rounded-panel transition-all duration-150 ease-ui",
-            "data-starting-style:scale-95 data-starting-style:opacity-0",
-            "data-ending-style:scale-95 data-ending-style:opacity-0",
+            "max-h-(--available-height) w-72 max-w-(--available-width) overflow-y-auto border border-border-default bg-surface-200 p-panel-sm text-text-primary shadow-floating backdrop-blur-floating outline-none",
+            "origin-(--transform-origin) rounded-panel transition-popup duration-control ease-ui data-ending-style:duration-exit",
+            "data-starting-style:scale-popup data-starting-style:opacity-0",
+            "data-ending-style:scale-popup data-ending-style:opacity-0",
             className,
           )}
           {...props}

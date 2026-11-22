@@ -30,16 +30,16 @@ export function DialogContent({
       <BaseDialog.Backdrop
         className={cn(
           "fixed inset-0 z-50 bg-surface-backdrop backdrop-blur-overlay",
-          "transition-opacity duration-150 ease-ui",
+          "transition-opacity duration-overlay ease-ui data-ending-style:duration-control",
           "data-ending-style:opacity-0 data-starting-style:opacity-0",
         )}
       />
       <BaseDialog.Popup
         className={cn(
           "fixed top-1/2 left-1/2 z-50 grid max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto border border-border-default bg-surface-100 p-panel text-text-primary shadow-modal outline-none",
-          "rounded-panel transition-all duration-150 ease-ui",
-          "data-starting-style:scale-95 data-starting-style:opacity-0",
-          "data-ending-style:scale-95 data-ending-style:opacity-0",
+          "rounded-panel transition-popup duration-overlay ease-ui data-ending-style:duration-control",
+          "data-starting-style:scale-popup data-starting-style:opacity-0",
+          "data-ending-style:scale-popup data-ending-style:opacity-0",
           className,
         )}
         {...props}
@@ -49,13 +49,13 @@ export function DialogContent({
           <BaseDialog.Close
             aria-label="Close dialog"
             className={cn(
-              "absolute top-3.5 right-3.5 inline-flex size-control-xs min-h-6 min-w-6 cursor-pointer items-center justify-center text-text-muted",
-              "rounded-control transition-colors duration-150 ease-ui",
+              "absolute top-3.5 right-3.5 inline-flex size-control-xs min-h-hit min-w-hit cursor-pointer items-center justify-center text-text-muted",
+              "rounded-control transition-control duration-control ease-ui active:scale-press-sm",
               "hover:bg-surface-hover hover:text-text-primary",
-              "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
+              "focus-ring",
             )}
           >
-            <XIcon className="size-4.5" />
+            <XIcon aria-hidden="true" className="size-4.5" />
           </BaseDialog.Close>
         ) : null}
       </BaseDialog.Popup>

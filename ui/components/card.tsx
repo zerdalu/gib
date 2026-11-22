@@ -51,7 +51,7 @@ export function CardFooter({ className, ...props }: CardFooterProps): ReactEleme
     <div
       className={cn(
         "flex flex-wrap items-center justify-between gap-2 border-t border-border-subtle bg-surface-sunken/50 px-panel py-panel-sm",
-        "rounded-b-panel",
+        "rounded-b-panel-inner",
         className,
       )}
       {...props}

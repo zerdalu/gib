@@ -10,22 +10,23 @@ export function Checkbox({ className, indeterminate, ...props }: CheckboxProps):
     <BaseCheckbox.Root
       indeterminate={indeterminate}
       className={cn(
-        "inline-flex size-6 min-h-6 min-w-6 shrink-0 cursor-pointer items-center justify-center border border-border-default bg-surface-sunken text-text-on-accent shadow-control",
-        "rounded-toggle transition-colors duration-150 ease-ui",
-        "hover:border-border-strong",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus",
+        "hit-target relative inline-flex size-checkbox shrink-0 cursor-pointer items-center justify-center border border-border-default bg-surface-sunken text-text-on-accent shadow-control",
+        "rounded-toggle transition-control duration-control ease-ui",
+        "hover:border-border-strong active:scale-press-sm",
+        "focus-ring",
         "data-checked:border-accent-primary data-checked:bg-accent-primary data-checked:hover:bg-accent-primary-hover",
         "data-indeterminate:border-accent-primary data-indeterminate:bg-accent-primary data-indeterminate:hover:bg-accent-primary-hover",
-        "disabled:pointer-events-none disabled:opacity-45 data-disabled:pointer-events-none data-disabled:opacity-45",
+        "data-invalid:border-status-danger data-invalid:focus-visible:outline-status-danger",
+        "disabled:pointer-events-none disabled:opacity-disabled data-disabled:pointer-events-none data-disabled:opacity-disabled",
         className,
       )}
       {...props}
     >
       <BaseCheckbox.Indicator className="flex items-center justify-center text-current data-unchecked:hidden">
         {indeterminate ? (
-          <MinusIcon weight="bold" className="size-3.5" />
+          <MinusIcon weight="bold" aria-hidden="true" className="size-3.5" />
         ) : (
-          <CheckIcon weight="bold" className="size-3.5" />
+          <CheckIcon weight="bold" aria-hidden="true" className="size-3.5" />
         )}
       </BaseCheckbox.Indicator>
     </BaseCheckbox.Root>

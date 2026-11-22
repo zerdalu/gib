@@ -20,18 +20,19 @@ export function SelectTrigger({ className, children, ...props }: SelectTriggerPr
   return (
     <BaseSelect.Trigger
       className={cn(
-        "inline-flex h-control-md min-h-6 w-full min-w-36 cursor-pointer items-center justify-between gap-2 border border-border-default bg-surface-sunken px-control-px-md font-sans text-sm text-text-primary shadow-control select-none",
-        "rounded-control transition-colors duration-150 ease-ui",
-        "hover:border-border-strong",
-        "focus-visible:border-border-focus focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-border-focus",
-        "data-disabled:pointer-events-none data-disabled:opacity-45",
+        "inline-flex h-control-md min-h-hit w-full min-w-36 cursor-pointer items-center justify-between gap-2 border border-border-default bg-surface-sunken px-control-px-md font-sans text-sm text-text-primary shadow-control select-none",
+        "rounded-control transition-colors duration-control ease-ui",
+        "hover:border-border-strong data-popup-open:border-border-strong",
+        "focus-ring-tight focus-visible:border-border-focus",
+        "data-invalid:border-status-danger data-invalid:focus-visible:outline-status-danger",
+        "disabled:pointer-events-none disabled:opacity-disabled data-disabled:pointer-events-none data-disabled:opacity-disabled",
         className,
       )}
       {...props}
     >
       {children}
       <BaseSelect.Icon className="flex shrink-0 items-center text-text-muted">
-        <CaretUpDownIcon className="size-4.5" />
+        <CaretUpDownIcon aria-hidden="true" className="size-4.5" />
       </BaseSelect.Icon>
     </BaseSelect.Trigger>
   );
@@ -48,6 +49,7 @@ export function SelectValue({ className, ...props }: SelectValueProps): ReactEle
 export interface SelectContentProps extends ComponentProps<typeof BaseSelect.Popup> {
   readonly sideOffset?: ComponentProps<typeof BaseSelect.Positioner>["sideOffset"];
   readonly alignItemWithTrigger?: ComponentProps<typeof BaseSelect.Positioner>["alignItemWithTrigger"];
+  readonly collisionPadding?: ComponentProps<typeof BaseSelect.Positioner>["collisionPadding"];
 }
 
 export function SelectContent({
@@ -55,6 +57,7 @@ export function SelectContent({
   children,
   sideOffset = 6,
   alignItemWithTrigger = false,
+  collisionPadding = 8,
   ...props
 }: SelectContentProps): ReactElement {
   return (
@@ -62,19 +65,20 @@ export function SelectContent({
       <BaseSelect.Positioner
         sideOffset={sideOffset}
         alignItemWithTrigger={alignItemWithTrigger}
+        collisionPadding={collisionPadding}
         className="z-50 outline-none"
       >
         <BaseSelect.Popup
           className={cn(
-            "min-w-(--anchor-width) overflow-hidden border border-border-default bg-surface-200 p-1 text-text-primary shadow-floating backdrop-blur-floating",
-            "rounded-panel transition-all duration-150 ease-ui",
-            "data-starting-style:scale-95 data-starting-style:opacity-0",
-            "data-ending-style:scale-95 data-ending-style:opacity-0",
+            "flex max-h-(--available-height) max-w-(--available-width) min-w-(--anchor-width) flex-col overflow-hidden border border-border-default bg-surface-200 p-1 text-text-primary shadow-floating backdrop-blur-floating",
+            "origin-(--transform-origin) rounded-panel transition-popup duration-control ease-ui data-ending-style:duration-exit",
+            "data-starting-style:scale-popup data-starting-style:opacity-0",
+            "data-ending-style:scale-popup data-ending-style:opacity-0",
             className,
           )}
           {...props}
         >
-          <BaseSelect.List className="max-h-72 overflow-y-auto outline-none">{children}</BaseSelect.List>
+          <BaseSelect.List className="max-h-72 min-h-0 flex-1 overflow-y-auto outline-none">{children}</BaseSelect.List>
         </BaseSelect.Popup>
       </BaseSelect.Positioner>
     </BaseSelect.Portal>
@@ -87,18 +91,17 @@ export function SelectItem({ className, children, ...props }: SelectItemProps): 
   return (
     <BaseSelect.Item
       className={cn(
-        "relative flex min-h-control-sm min-w-6 cursor-pointer items-center justify-between gap-2 px-control-px-sm py-1.5 font-sans text-xs text-text-secondary outline-none select-none",
-        "rounded-control transition-colors duration-100 ease-ui",
+        "relative flex min-h-control-sm min-w-hit cursor-pointer items-center justify-between gap-2 rounded-control px-control-px-sm py-1.5 font-sans text-xs text-text-secondary outline-none select-none",
         "data-highlighted:bg-surface-hover data-highlighted:text-text-primary",
         "data-selected:font-ui data-selected:text-text-primary",
-        "data-disabled:pointer-events-none data-disabled:opacity-45",
+        "data-disabled:pointer-events-none data-disabled:opacity-disabled",
         className,
       )}
       {...props}
     >
       <BaseSelect.ItemText className="truncate">{children}</BaseSelect.ItemText>
       <BaseSelect.ItemIndicator className="inline-flex shrink-0 items-center text-accent-primary">
-        <CheckIcon weight="bold" className="size-4" />
+        <CheckIcon weight="bold" aria-hidden="true" className="size-4" />
       </BaseSelect.ItemIndicator>
     </BaseSelect.Item>
   );

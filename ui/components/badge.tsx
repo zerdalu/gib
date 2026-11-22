@@ -23,7 +23,7 @@ export function Badge({ variant = BadgeVariants.Default, className, ...props }: 
     <span
       className={cn(
         "inline-flex shrink-0 items-center justify-center gap-1.5 border px-2 py-0.5 font-mono text-xs font-ui tracking-mono whitespace-nowrap tabular-nums select-none",
-        "rounded-badge transition-colors duration-150 ease-ui",
+        "rounded-badge transition-colors duration-control ease-ui",
         badgeVariantClasses[variant],
         className,
       )}

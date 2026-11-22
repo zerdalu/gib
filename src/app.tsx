@@ -95,17 +95,17 @@ function StackColumn({ group }: StackColumnProps): ReactElement {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex min-h-control-sm min-w-6 items-center justify-between gap-2 rounded-control px-control-px-sm py-1.5 text-text-primary transition-colors duration-150 ease-ui hover:bg-accent-primary hover:text-text-on-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus"
+              className="group flex min-h-control-sm min-w-hit items-center justify-between gap-2 rounded-control px-control-px-sm py-1.5 text-text-primary focus-ring transition-control duration-control ease-ui hover:bg-accent-primary hover:text-text-on-accent active:scale-press active:bg-accent-primary-active"
             >
               <span className="flex min-w-0 items-center gap-2.5">
-                <span className="font-mono text-xs text-text-muted tabular-nums transition-colors duration-150 ease-ui group-hover:text-text-on-accent">
+                <span className="font-mono text-xs text-text-muted tabular-nums transition-colors duration-control ease-ui group-hover:text-text-on-accent">
                   {item.index}
                 </span>
                 <span className="truncate font-sans text-sm font-ui">{item.name}</span>
               </span>
               <ArrowUpRightIcon
                 aria-hidden="true"
-                className="size-4.5 shrink-0 text-text-muted transition-colors duration-150 ease-ui group-hover:text-text-on-accent"
+                className="size-4.5 shrink-0 text-text-muted transition-[color,translate] duration-control ease-ui group-hover:text-text-on-accent motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5"
               />
             </a>
           </li>
@@ -133,7 +133,7 @@ export function App(): ReactElement {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Gib repository on GitHub"
-          className="inline-flex h-control-md min-w-6 items-center gap-2 rounded-control border border-border-default bg-surface-100 px-control-px-md font-mono text-xs font-ui tracking-mono text-text-primary shadow-control transition-colors duration-150 ease-ui hover:border-border-strong hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-focus"
+          className="inline-flex h-control-md min-h-hit min-w-hit items-center gap-2 rounded-control border border-border-default bg-surface-100 px-control-px-md font-mono text-xs font-ui tracking-mono text-text-primary shadow-control focus-ring transition-control duration-control ease-ui hover:border-border-strong hover:bg-surface-hover active:scale-press active:bg-surface-active"
         >
           <svg aria-hidden="true" className="size-4.5 shrink-0">
             <use href="/icons.svg#github-icon" />
@@ -171,7 +171,7 @@ export function App(): ReactElement {
           ))}
         </section>
 
-        <QuickCopy repoUrl={REPO_SSH_URL} className="justify-self-end lg:col-span-12" />
+        <QuickCopy repoUrl={REPO_SSH_URL} className="justify-self-start lg:col-span-12" />
       </main>
     </div>
   );

@@ -16,6 +16,7 @@ export const ButtonSizes = {
   IconXs: "icon-xs",
   IconSm: "icon-sm",
   IconMd: "icon-md",
+  IconLg: "icon-lg",
 } as const;
 
 export type ButtonSize = (typeof ButtonSizes)[keyof typeof ButtonSizes];
