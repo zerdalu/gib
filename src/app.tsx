@@ -4,7 +4,7 @@ import { NodeFrame, type NodePort } from "@/components/node-frame";
 import { QuickCopy } from "@/components/quick-copy";
 import { NodeFrameVariants, NodePortSides, NodePortTones, QuickCopyVariants } from "@/variants";
 import { ArrowUpRightIcon, CpuIcon, StackIcon, TerminalIcon, WrenchIcon } from "@phosphor-icons/react";
-import { Separator } from "@ui/index";
+import { Button, ButtonSizes, ButtonVariants, Separator } from "@ui/index";
 import { cn } from "cn";
 import { useState, type CSSProperties, type ReactElement } from "react";
 
@@ -22,8 +22,33 @@ interface StackGroup {
   readonly items: readonly StackLibrary[];
 }
 
+const CloneRepoIds = {
+  Gib: "gib",
+  GibYt: "gib-yt",
+} as const;
+
+type CloneRepoId = (typeof CloneRepoIds)[keyof typeof CloneRepoIds];
+
+interface CloneRepoOption {
+  readonly id: CloneRepoId;
+  readonly label: string;
+  readonly sshUrl: string;
+}
+
 const GITHUB_URL = "https://github.com/zerdalu/gib";
-const REPO_SSH_URL = "git@github.com:zerdalu/gib.git";
+
+const CLONE_REPOS: readonly [CloneRepoOption, CloneRepoOption] = [
+  {
+    id: CloneRepoIds.Gib,
+    label: "gib",
+    sshUrl: "git@github.com:zerdalu/gib.git",
+  },
+  {
+    id: CloneRepoIds.GibYt,
+    label: "gib-yt",
+    sshUrl: "git@github.com:zerdalu/gib-yt.git",
+  },
+];
 
 const GIB_ICON_MASK_STYLE: CSSProperties = {
   maskImage: `url("${gibIconUrl}")`,
@@ -125,6 +150,19 @@ function resolveGroupIndex(groupId: StackGroupId): number {
   }
 }
 
+function resolveCloneRepo(repoId: CloneRepoId): CloneRepoOption {
+  switch (repoId) {
+    case CloneRepoIds.Gib:
+      return CLONE_REPOS[0];
+    case CloneRepoIds.GibYt:
+      return CLONE_REPOS[1];
+    default: {
+      const _exhaustive: never = repoId;
+      throw new Error(`Unhandled clone repo id: ${String(_exhaustive)}`);
+    }
+  }
+}
+
 interface StackNodeProps {
   readonly group: StackGroup;
   readonly isActive: boolean;
@@ -197,8 +235,38 @@ function StackNode({ group, isActive, onActivate }: StackNodeProps): ReactElemen
   );
 }
 
+interface CloneRepoButtonProps {
+  readonly repo: CloneRepoOption;
+  readonly isSelected: boolean;
+  readonly onSelect: (id: CloneRepoId) => void;
+}
+
+function CloneRepoButton({ repo, isSelected, onSelect }: CloneRepoButtonProps): ReactElement {
+  const handleClick = (): void => {
+    onSelect(repo.id);
+  };
+
+  return (
+    <Button
+      type="button"
+      variant={ButtonVariants.Ghost}
+      size={ButtonSizes.Xs}
+      aria-pressed={isSelected}
+      onClick={handleClick}
+      className={cn(
+        "text-node-featured-muted hover:bg-node-featured-well hover:text-node-featured-text active:bg-node-featured-well",
+        "aria-pressed:border-node-featured-border aria-pressed:bg-node-featured-well aria-pressed:text-node-featured-text aria-pressed:shadow-control",
+      )}
+    >
+      {repo.label}
+    </Button>
+  );
+}
+
 export function App(): ReactElement {
   const [activeGroupId, setActiveGroupId] = useState<StackGroupId>("interface");
+  const [selectedRepoId, setSelectedRepoId] = useState<CloneRepoId>(CloneRepoIds.Gib);
+  const selectedRepo = resolveCloneRepo(selectedRepoId);
 
   return (
     <div className="flex min-h-dvh flex-col text-text-primary">
@@ -306,23 +374,39 @@ export function App(): ReactElement {
             <NodeFrame
               variant={NodeFrameVariants.Featured}
               ports={FEATURED_PORTS}
-              contentClassName="flex flex-col gap-3 p-panel-sm md:flex-row md:items-center md:gap-4"
+              contentClassName="flex flex-col gap-3 p-panel-sm"
             >
-              <div className="flex shrink-0 items-center gap-2.5">
-                <span className="inline-flex size-control-sm shrink-0 items-center justify-center rounded-control border border-node-featured-well-border bg-node-featured-well">
-                  <TerminalIcon aria-hidden="true" className="size-4.5 text-node-featured-text" />
-                </span>
-                <h2
-                  id="quick-clone-heading"
-                  className="font-display text-sm font-heading tracking-heading whitespace-nowrap text-node-featured-text"
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex shrink-0 items-center gap-2.5">
+                  <span className="inline-flex size-control-sm shrink-0 items-center justify-center rounded-control border border-node-featured-well-border bg-node-featured-well">
+                    <TerminalIcon aria-hidden="true" className="size-4.5 text-node-featured-text" />
+                  </span>
+                  <h2
+                    id="quick-clone-heading"
+                    className="font-display text-sm font-heading tracking-heading whitespace-nowrap text-node-featured-text"
+                  >
+                    Quick Clone
+                  </h2>
+                </div>
+
+                <fieldset
+                  aria-label="Repository"
+                  className="min-w-0 shrink-0 rounded-control border border-node-featured-well-border bg-node-featured-well p-0.5 backdrop-blur-overlay"
                 >
-                  Quick Clone
-                </h2>
+                  <div className="inline-flex items-center gap-1">
+                    {CLONE_REPOS.map((repo) => (
+                      <CloneRepoButton
+                        key={repo.id}
+                        repo={repo}
+                        isSelected={repo.id === selectedRepoId}
+                        onSelect={setSelectedRepoId}
+                      />
+                    ))}
+                  </div>
+                </fieldset>
               </div>
 
-              <div aria-hidden="true" className="hidden h-6 w-px shrink-0 bg-node-featured-well-border md:block" />
-
-              <QuickCopy variant={QuickCopyVariants.Featured} repoUrl={REPO_SSH_URL} className="w-full flex-1" />
+              <QuickCopy variant={QuickCopyVariants.Featured} repoUrl={selectedRepo.sshUrl} className="w-full" />
             </NodeFrame>
           </section>
         </div>

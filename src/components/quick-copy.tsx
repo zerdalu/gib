@@ -17,8 +17,17 @@ export type { QuickCopyVariant };
 
 type CopyStatus = "idle" | "copied" | "failed";
 
+interface CopyFeedback {
+  readonly status: CopyStatus;
+  readonly command: string;
+}
+
 const STATUS_RESET_DELAY_MS = 2000;
 const DEFAULT_PROJECT_NAME = "my-app";
+const IDLE_FEEDBACK: CopyFeedback = {
+  status: "idle",
+  command: "",
+};
 
 export interface QuickCopyProps {
   readonly repoUrl: string;
@@ -146,12 +155,13 @@ export function QuickCopy({
   className,
 }: QuickCopyProps): ReactElement {
   const [nameInput, setNameInput] = useState<string>("");
-  const [status, setStatus] = useState<CopyStatus>("idle");
+  const [feedback, setFeedback] = useState<CopyFeedback>(IDLE_FEEDBACK);
   const resetTimerRef = useRef<number | null>(null);
 
   const isFeatured = variant === QuickCopyVariants.Featured;
   const projectName = resolveProjectName(nameInput, defaultName);
   const command = buildCloneCommand(repoUrl, projectName);
+  const status: CopyStatus = feedback.command === command ? feedback.status : "idle";
 
   useEffect(() => {
     return () => {
@@ -168,10 +178,13 @@ export function QuickCopy({
     }
 
     const copied = await writeToClipboard(command);
-    setStatus(copied ? "copied" : "failed");
+    setFeedback({
+      status: copied ? "copied" : "failed",
+      command,
+    });
 
     resetTimerRef.current = window.setTimeout(() => {
-      setStatus("idle");
+      setFeedback(IDLE_FEEDBACK);
       resetTimerRef.current = null;
     }, STATUS_RESET_DELAY_MS);
   };
