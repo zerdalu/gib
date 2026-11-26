@@ -19,7 +19,7 @@
     "@base-ui/react": "^1.9.0",
     "@phosphor-icons/react": "^2.1.10",
     "cn": "^0.5.2",
-    "hono": "^4.13.21",
+    "hono": "^4.13.22",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "valibot": "^1.5.0",
@@ -27,13 +27,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",
-    "@cloudflare/vite-plugin": "^1.70.1",
-    "@cloudflare/workers-types": "^5.20261123.1",
+    "@cloudflare/vite-plugin": "^1.70.2",
+    "@cloudflare/workers-types": "^5.20261125.1",
     "@rolldown/plugin-babel": "^0.3.1",
     "@tailwindcss/vite": "^4.3.5",
     "@types/babel__core": "^7.20.5",
-    "@types/node": "^26.6.6",
-    "@types/react": "^19.3.0",
+    "@types/node": "^26.6.10",
+    "@types/react": "^19.3.3",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
     "babel-plugin-react-compiler": "^1.0.0",
@@ -43,8 +43,8 @@
     "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",
     "vite": "^8.3.8",
-    "vitest": "^5.1.1",
-    "wrangler": "^4.167.0"
+    "vitest": "^5.1.2",
+    "wrangler": "^4.168.0"
   },
   "packageManager": "pnpm@12.23.0"
 }
