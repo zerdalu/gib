@@ -1,6 +1,6 @@
 # Gib
 
-**Gib** is a full-stack edge application template powered by React, Hono, and Cloudflare Workers. It includes a token-driven UI system built on Base UI and Tailwind CSS v4 where colors, theme polarity, typography, geometry, elevation, density, control proportions, focus rings, hit targets, and motion are all controlled via CSS variables—allowing new projects to adopt a completely different visual identity by editing `src/index.css` without touching component code. See [`STYLING.md`](./STYLING.md) for the complete token reference and re-skinning checklist.
+**Gib** is a full-stack edge application template powered by React, Hono, and Cloudflare Workers. It includes a token-driven UI system built on Base UI and Tailwind CSS v4 where colors, theme polarity, typography, geometry, elevation, density, control proportions, focus rings, hit targets, and motion are all controlled via CSS variables—allowing new projects to adopt a completely different visual identity by editing `src/index.css` without touching component code.
 
 ## Library Stack
 
@@ -24,6 +24,6 @@
 
 - [ ] Build and publish a personal scaffolding CLI (e.g., `@zerdalu/getir` or `pnpm create @zerdalu/gib`) to bootstrap new projects from this template:
   - Shallow clone `git@github.com:zerdalu/gib.git` over SSH into the target directory and remove `.git`
-  - Replace `"name": "gib"` in `package.json` and `wrangler.jsonc` with the new project name
-  - Update `<title>` in `index.html` and remove the template domain route from `wrangler.jsonc`
+  - Replace `"name": "gib"` in `package.json` and `cloudflare.config.ts` with the new project name
+  - Update `<title>` in `index.html` and remove the template domain route from `cloudflare.config.ts`
   - Initialize a fresh Git repository (`git init`) and install dependencies (`pnpm install`)

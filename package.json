@@ -6,15 +6,14 @@
   "scripts": {
     "dev": "cf dev",
     "build": "pnpm run cf-typegen && tsc -b && cf build",
-    "deploy": "tsc -b && cf deploy && npm run og",
+    "deploy": "pnpm run cf-typegen && tsc -b && cf deploy",
     "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
     "cf-typegen": "cf workers types",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check",
-    "og": "bash scripts/generate-og.sh"
+    "fmt:check": "oxfmt --check"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

@@ -20,9 +20,5 @@ export default defineConfig({
     env: {
       ASSETS: bindings.assets(),
     },
-    /**
-     * TODO(@cloudflare): cf migrate: The Wrangler assets directory was not migrated. Configure static assets in the Vite project.
-     * @see https://developers.cloudflare.com/workers/wrangler/configuration/
-     */
   },
 });

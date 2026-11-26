@@ -14,7 +14,7 @@ export function TabsList({ className, children, ...props }: TabsListProps): Reac
   return (
     <BaseTabs.List
       className={cn(
-        "relative inline-flex w-fit max-w-full items-center gap-1 overflow-x-auto border border-border-subtle bg-surface-sunken p-1",
+        "relative inline-flex w-fit max-w-full items-center gap-1 overflow-x-auto border border-border-subtle bg-surface-sunken px-1 py-1.5",
         "rounded-control",
         className,
       )}

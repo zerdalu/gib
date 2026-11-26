@@ -140,7 +140,8 @@ function renderStatusIcon(status: CopyStatus, isFeatured: boolean): ReactElement
       <WarningCircleIcon
         aria-hidden="true"
         className={cn(
-          "absolute size-4.5 text-status-danger-text transition-icon duration-control ease-ui",
+          "absolute size-4.5 transition-icon duration-control ease-ui",
+          isFeatured ? "text-node-featured-danger" : "text-status-danger-text",
           getIconVisibilityClass(status === "failed"),
         )}
       />
@@ -157,6 +158,7 @@ export function QuickCopy({
   const [nameInput, setNameInput] = useState<string>("");
   const [feedback, setFeedback] = useState<CopyFeedback>(IDLE_FEEDBACK);
   const resetTimerRef = useRef<number | null>(null);
+  const isMountedRef = useRef<boolean>(true);
 
   const isFeatured = variant === QuickCopyVariants.Featured;
   const projectName = resolveProjectName(nameInput, defaultName);
@@ -164,7 +166,9 @@ export function QuickCopy({
   const status: CopyStatus = feedback.command === command ? feedback.status : "idle";
 
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
+      isMountedRef.current = false;
       if (resetTimerRef.current !== null) {
         window.clearTimeout(resetTimerRef.current);
       }
@@ -178,6 +182,10 @@ export function QuickCopy({
     }
 
     const copied = await writeToClipboard(command);
+    if (!isMountedRef.current) {
+      return;
+    }
+
     setFeedback({
       status: copied ? "copied" : "failed",
       command,

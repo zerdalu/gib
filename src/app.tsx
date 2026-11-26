@@ -82,8 +82,8 @@ const STACK_GROUPS: readonly [StackGroup, StackGroup, StackGroup] = [
       { index: "08", name: "Hono", href: "https://hono.dev/" },
       {
         index: "09",
-        name: "Cloudflare Wrangler",
-        href: "https://developers.cloudflare.com/workers/wrangler/",
+        name: "Cloudflare CLI",
+        href: "https://developers.cloudflare.com/cf/get-started/",
       },
     ],
   },
@@ -286,13 +286,13 @@ export function App(): ReactElement {
           href={GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Gib repository on GitHub"
           className="inline-flex h-control-md min-h-hit min-w-hit items-center gap-2 rounded-control border border-node-border bg-node-glass px-control-px-md font-mono text-xs font-ui tracking-mono text-text-primary shadow-control focus-ring backdrop-blur-overlay transition-control duration-control ease-ui hover:border-border-strong hover:bg-surface-hover active:scale-press active:bg-surface-active"
         >
           <svg aria-hidden="true" className="size-4.5 shrink-0">
             <use href="/icons.svg#github-icon" />
           </svg>
           <span>zerdalu/gib</span>
+          <span className="sr-only"> repository on GitHub</span>
         </a>
       </header>
 
@@ -303,27 +303,31 @@ export function App(): ReactElement {
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6 py-5 md:px-10 md:py-6">
         <div className="my-auto flex w-full flex-col">
           <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-12 lg:gap-0">
-            <div className="flex flex-col items-center gap-2 lg:col-span-3">
-              <NodeFrame
-                active
-                ports={EMBLEM_PORTS}
-                className="w-28"
-                contentClassName="flex aspect-square items-center justify-center p-panel-sm"
-              >
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-4 rounded-full bg-node-glow opacity-45 blur-xl"
-                />
-                <span
-                  aria-hidden="true"
-                  style={GIB_ICON_MASK_STYLE}
-                  className="relative inline-block size-9 bg-text-primary"
-                />
-              </NodeFrame>
-              <span className="font-mono text-xs tracking-mono text-text-secondary">Edge Template</span>
-            </div>
+            <div className="flex flex-col items-center lg:col-span-5 lg:flex-row lg:items-center lg:pl-14">
+              <div className="relative flex flex-col items-center gap-2">
+                <NodeFrame
+                  active
+                  ports={EMBLEM_PORTS}
+                  className="w-28"
+                  contentClassName="flex aspect-square items-center justify-center p-panel-sm"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-4 rounded-full bg-node-glow opacity-45 blur-xl"
+                  />
+                  <span
+                    aria-hidden="true"
+                    style={GIB_ICON_MASK_STYLE}
+                    className="relative inline-block size-9 bg-text-primary"
+                  />
+                </NodeFrame>
+                <span className="font-mono text-xs tracking-mono whitespace-nowrap text-text-secondary lg:absolute lg:top-full lg:mt-2">
+                  Edge Template
+                </span>
+              </div>
 
-            <HorizontalConnector className="lg:col-span-2" />
+              <HorizontalConnector className="lg:flex-1" />
+            </div>
 
             <section aria-labelledby="gib-overview" className="lg:col-span-7">
               <NodeFrame active ports={HUB_PORTS} contentClassName="flex flex-col gap-2.5 p-panel">
