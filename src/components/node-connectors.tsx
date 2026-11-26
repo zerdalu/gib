@@ -41,30 +41,39 @@ export interface BranchConnectorProps {
 }
 
 interface BranchGeometry {
-  readonly startX: number;
   readonly endX: number;
+  readonly startControlOffset: number;
+  readonly endControlOffset: number;
 }
 
+const HUB_PORT_X = 708;
+
 const BRANCH_GEOMETRIES: readonly [BranchGeometry, BranchGeometry, BranchGeometry] = [
-  { startX: 540, endX: 158 },
-  { startX: 710, endX: 500 },
-  { startX: 880, endX: 842 },
+  { endX: 158, startControlOffset: 14, endControlOffset: -14 },
+  { endX: 500, startControlOffset: 12, endControlOffset: -12 },
+  { endX: 842, startControlOffset: -12, endControlOffset: 12 },
 ];
 
 export function BranchConnector({ ids, activeId, className }: BranchConnectorProps): ReactElement {
+  const orderedBranches = ids
+    .map((id, index) => ({
+      id,
+      geometry: BRANCH_GEOMETRIES[index],
+      isActive: id === activeId,
+    }))
+    .toSorted((a, b) => Number(a.isActive) - Number(b.isActive));
+
   return (
     <div aria-hidden="true" className={cn("relative hidden h-14 w-full lg:block", className)}>
       <svg viewBox="0 0 1000 56" fill="none" preserveAspectRatio="none" className="h-full w-full overflow-visible">
-        {ids.map((id, index) => {
-          const geometry = BRANCH_GEOMETRIES[index];
+        {orderedBranches.map(({ id, geometry, isActive }) => {
           if (!geometry) {
             return null;
           }
 
-          const isActive = id === activeId;
           const strokeColor = isActive ? "var(--color-connector-active)" : "var(--color-connector-muted)";
-          const primaryPath = `M ${geometry.startX} 0 C ${geometry.startX} 28, ${geometry.endX} 26, ${geometry.endX} 56`;
-          const secondaryPath = `M ${geometry.startX + 12} 0 C ${geometry.startX + 24} 26, ${geometry.endX - 16} 30, ${geometry.endX} 56`;
+          const primaryPath = `M ${HUB_PORT_X} 0 C ${HUB_PORT_X} 28, ${geometry.endX} 26, ${geometry.endX} 56`;
+          const secondaryPath = `M ${HUB_PORT_X} 0 C ${HUB_PORT_X + geometry.startControlOffset} 28, ${geometry.endX + geometry.endControlOffset} 28, ${geometry.endX} 56`;
 
           return (
             <g key={id}>
@@ -108,11 +117,16 @@ export interface ConvergeConnectorProps {
 const CONVERGE_START_X: readonly [number, number, number] = [158, 500, 842];
 
 export function ConvergeConnector({ activeIndex, className }: ConvergeConnectorProps): ReactElement {
+  const orderedPaths = CONVERGE_START_X.map((startX, index) => ({
+    startX,
+    index,
+    isActive: index === activeIndex,
+  })).toSorted((a, b) => Number(a.isActive) - Number(b.isActive));
+
   return (
     <div aria-hidden="true" className={cn("relative hidden h-11 w-full lg:block", className)}>
       <svg viewBox="0 0 1000 44" fill="none" preserveAspectRatio="none" className="h-full w-full overflow-visible">
-        {CONVERGE_START_X.map((startX, index) => {
-          const isActive = index === activeIndex;
+        {orderedPaths.map(({ startX, index, isActive }) => {
           const strokeColor = isActive ? "var(--color-connector-active)" : "var(--color-connector-muted)";
           const primaryPath = `M ${startX} 0 C ${startX} 24, 500 18, 500 44`;
           const secondaryPath = `M ${startX} 0 C ${startX + (index === 0 ? 18 : index === 2 ? -18 : 12)} 26, ${500 + (index === 1 ? -12 : 0)} 18, 500 44`;

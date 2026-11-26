@@ -5,6 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gib</title>
+    <script>
+      try {
+        var theme = localStorage.getItem("gib-theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch {}
+    </script>
     <meta
       name="description"
       content="Full-stack edge application template powered by React, Hono, and Cloudflare Workers."

@@ -51,7 +51,7 @@ export function NodeFrame({
   const isHighlighted = isFeatured || active;
 
   return (
-    <div className={cn("relative", className)} {...props}>
+    <div className={cn("relative flex flex-col", className)} {...props}>
       {isFeatured ? (
         <span
           aria-hidden="true"
@@ -73,7 +73,7 @@ export function NodeFrame({
 
       <div
         className={cn(
-          "relative rounded-node-frame border p-2 transition-node duration-overlay ease-ui",
+          "relative flex flex-1 flex-col rounded-node-frame border p-2 transition-node duration-overlay ease-ui",
           isHighlighted ? "border-node-frame-active" : "border-node-frame",
         )}
       >
@@ -102,7 +102,7 @@ export function NodeFrame({
 
         <div
           className={cn(
-            "relative rounded-panel border backdrop-blur-floating transition-node duration-overlay ease-ui",
+            "relative flex-1 rounded-panel border backdrop-blur-floating transition-node duration-overlay ease-ui",
             isFeatured
               ? "border-node-featured-border bg-node-featured text-node-featured-text shadow-node-featured"
               : cn(

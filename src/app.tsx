@@ -2,6 +2,7 @@ import gibIconUrl from "@/assets/icon.svg";
 import { BranchConnector, ConvergeConnector, HorizontalConnector } from "@/components/node-connectors";
 import { NodeFrame, type NodePort } from "@/components/node-frame";
 import { QuickCopy } from "@/components/quick-copy";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { NodeFrameVariants, NodePortSides, NodePortTones, QuickCopyVariants } from "@/variants";
 import { ArrowUpRightIcon, CpuIcon, StackIcon, TerminalIcon, WrenchIcon } from "@phosphor-icons/react";
 import { Button, ButtonSizes, ButtonVariants, Separator } from "@ui/index";
@@ -270,7 +271,7 @@ export function App(): ReactElement {
 
   return (
     <div className="flex min-h-dvh flex-col text-text-primary">
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 pt-5 pb-3.5 md:px-10 md:pt-6">
+      <header className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-6 pt-5 pb-3.5 md:px-10 md:pt-6">
         <div className="flex items-center gap-3">
           <span className="inline-flex size-control-sm items-center justify-center rounded-control border border-node-border bg-node-glass shadow-control backdrop-blur-overlay">
             <span
@@ -282,18 +283,22 @@ export function App(): ReactElement {
           <span className="font-mono text-sm font-heading tracking-mono text-text-primary uppercase">Gib</span>
         </div>
 
-        <a
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-control-md min-h-hit min-w-hit items-center gap-2 rounded-control border border-node-border bg-node-glass px-control-px-md font-mono text-xs font-ui tracking-mono text-text-primary shadow-control focus-ring backdrop-blur-overlay transition-control duration-control ease-ui hover:border-border-strong hover:bg-surface-hover active:scale-press active:bg-surface-active"
-        >
-          <svg aria-hidden="true" className="size-4.5 shrink-0">
-            <use href="/icons.svg#github-icon" />
-          </svg>
-          <span>zerdalu/gib</span>
-          <span className="sr-only"> repository on GitHub</span>
-        </a>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-control-md min-h-hit min-w-hit items-center gap-2 rounded-control border border-node-border bg-node-glass px-control-px-md font-mono text-xs font-ui tracking-mono text-text-primary shadow-control focus-ring backdrop-blur-overlay transition-control duration-control ease-ui hover:border-border-strong hover:bg-surface-hover active:scale-press active:bg-surface-active"
+          >
+            <svg aria-hidden="true" className="size-4.5 shrink-0">
+              <use href="/icons.svg#github-icon" />
+            </svg>
+            <span>zerdalu/gib</span>
+            <span className="sr-only"> repository on GitHub</span>
+          </a>
+        </div>
       </header>
 
       <div className="mx-auto w-full max-w-5xl px-6 md:px-10">
