@@ -12,7 +12,7 @@
 - Zustand - https://zustand.docs.pmnd.rs/
 - Valibot - https://valibot.dev/
 - Hono - https://hono.dev/
-- Cloudflare Wrangler - https://developers.cloudflare.com/workers/wrangler/
+- Cloudflare CLI - https://developers.cloudflare.com/cf/get-started/
 - Vite - https://vite.dev/
 - Oxlint - https://oxc.rs/docs/guide/usage/linter.html
 - Oxfmt - https://oxc.rs/docs/guide/usage/formatter.html

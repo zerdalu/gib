@@ -5,11 +5,11 @@
     "strict": true,
     "module": "esnext",
     "moduleResolution": "bundler",
-    "types": ["@cloudflare/workers-types", "vite/client"],
+    "types": ["vite/client"],
     "paths": {
       "@shared/*": ["./shared/*"],
-      "@worker/*": ["./worker/*"],
-    },
+      "@worker/*": ["./worker/*"]
+    }
   },
-  "include": ["shared", "worker", "worker-configuration.d.ts"],
+  "include": ["shared", "worker", ".cloudflare/types/index.d.ts"]
 }

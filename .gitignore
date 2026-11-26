@@ -28,5 +28,6 @@ docs
 youtube
 
 .wrangler
+.cloudflare
 .dev.vars*
 worker-configuration.d.ts

@@ -4,16 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "deploy": "pnpm run build && wrangler deploy",
+    "dev": "cf dev",
+    "build": "pnpm run cf-typegen && tsc -b && cf build",
+    "deploy": "tsc -b && cf deploy && npm run og",
     "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "cf-typegen": "cf workers types",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "og": "bash scripts/generate-og.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -27,8 +28,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",
-    "@cloudflare/vite-plugin": "^1.70.2",
-    "@cloudflare/workers-types": "^5.20261125.1",
+    "@cloudflare/vite-plugin": "^2.0.0-rc.5",
     "@rolldown/plugin-babel": "^0.3.1",
     "@tailwindcss/vite": "^4.3.5",
     "@types/babel__core": "^7.20.5",
@@ -37,14 +37,14 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
     "babel-plugin-react-compiler": "^1.0.0",
+    "cf": "1.0.0-rc.6",
     "oxfmt": "^0.80.0",
     "oxlint": "^1.95.0",
     "oxlint-tsgolint": "^7.0.2008",
     "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",
     "vite": "^8.3.8",
-    "vitest": "^5.1.2",
-    "wrangler": "^4.168.0"
+    "vitest": "^5.1.2"
   },
   "packageManager": "pnpm@12.23.0"
 }

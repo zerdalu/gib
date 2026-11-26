@@ -4,7 +4,7 @@
   "jsx_tag_auto_close": {
     "enabled": true
   },
-  "hidden_files": ["node_modules", ".wrangler", "pnpm-lock.yaml", "dist", "worker-configuration.d.ts"],
+  "hidden_files": ["node_modules", ".wrangler", ".cloudflare", "pnpm-lock.yaml", "dist"],
   "lsp": {
     "oxlint": {
       "initialization_options": {
